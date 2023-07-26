@@ -1,0 +1,4 @@
+*.*
+!media/videos/1080p60/MathScene.mp4
+!*.py
+!.gitignore
