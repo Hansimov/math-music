@@ -1,34 +1,41 @@
 from manim import *
+from math import pow
 
 
-def create_glow(
-    obj,
-    num_circles=60,
-    max_radius=0.6,
-    color=YELLOW,
-    decay_func=lambda i: 1 / i * i,
+def create_glow_for_dot(
+    dot,
+    circles_num=60,
+    glow_radius_ratio=10,
+    color=None,
+    decay_func=lambda i: 0.8 / (pow(i, 1) + 0.001),
 ):
     glow = VGroup()
-    for i in range(1, num_circles):
+    max_glow_radius = dot.radius * glow_radius_ratio
+    for i in range(circles_num):
         circle = Circle(
-            radius=i * max_radius / num_circles,
+            radius=i / circles_num * max_glow_radius,
             fill_opacity=decay_func(i),
-            fill_color=color,
+            fill_color=dot.color if color is None else color,
             stroke_opacity=0,
         )
         glow.add(circle)
     return glow
 
 
+class GlowingDot(VGroup):
+    def __init__(self, **kwargs):
+        VGroup.__init__(self, **kwargs)
+        self.dot = Dot3D(color=YELLOW)
+        self.add(self.dot)
+        self.glow = create_glow_for_dot(self.dot)
+        self.add(self.glow)
+
+
 class SpeedTransform(ThreeDScene):
     def construct(self):
         self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
-        dot = Dot3D()
-        glow = create_glow()
-        # self.add_fixed_in_frame_mobjects(glow)
-        glowed_dot = VGroup(dot, glow)
-        self.play(FadeIn(glowed_dot))
-        # self.play(FadeIn(glow))
+        glowing_dot = GlowingDot()
+        self.play(FadeIn(glowing_dot))
         self.wait()
 
 
