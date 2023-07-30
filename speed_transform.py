@@ -1,5 +1,26 @@
 from manim import *
 from math import pow
+import numpy as np
+
+
+def set_render_config(quality="low"):
+    if quality == "low":
+        pixel_ratio = 0.25
+
+        config.frame_rate = 30
+    elif quality == "medium":
+        pixel_ratio = 0.5
+        config.frame_rate = 30
+    else:
+        pixel_ratio = 1
+        config.frame_rate = 60
+
+    config.pixel_width = int(1920 * pixel_ratio)
+    config.pixel_height = int(1080 * pixel_ratio)
+
+
+set_render_config("high")
+config.disable_caching = True
 
 
 def create_glow_for_dot(
@@ -37,12 +58,21 @@ class GlowDot(VGroup):
 
 class SpeedTransform(ThreeDScene):
     def create_dots(self):
-        for i in range(5):
-            fadein_time = 2 - i / 5
-            dot = Dot3D(color=YELLOW, point=[i, 0, 0])
+        glow_dots = []
+        dots_num = 15
+        for i in range(dots_num):
+            dot = Dot3D(color=YELLOW, point=[0, i * 0.5, 0])
             glow_dot = GlowDot(dot)
-            self.play(FadeIn(glow_dot), run_time=fadein_time)
-            # self.wait()
+            glow_dots.append(glow_dot)
+
+        wait_time_value_space = 1 * 0.5 ** np.arange(dots_num)
+        for idx, glow_dot in enumerate(glow_dots):
+            self.play(
+                FadeIn(glow_dot),
+                run_time=wait_time_value_space[idx],
+            )
+            self.wait(wait_time_value_space[idx])
+            # self.set_camera_orientation(zoom)
 
     def set_camera_options(self):
         self.set_camera_orientation(
