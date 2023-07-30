@@ -1,5 +1,6 @@
 from manim import *
 from math import pow
+from utils import calc_centroid
 import numpy as np
 
 
@@ -56,23 +57,26 @@ class GlowDot(VGroup):
         self.add(self.dot, self.glow)
 
 
-class SpeedTransform(ThreeDScene):
+class SpeedTransform(MovingCameraScene):
     def create_dots(self):
         glow_dots = []
         dots_num = 15
         for i in range(dots_num):
-            dot = Dot3D(color=YELLOW, point=[0, i * 0.5, 0])
+            dot = Dot3D(color=YELLOW, point=[i, 0, 0])
             glow_dot = GlowDot(dot)
             glow_dots.append(glow_dot)
 
-        wait_time_value_space = 1 * 0.5 ** np.arange(dots_num)
+        # wait_time_value_space = 1 * 0.5 ** np.arange(dots_num)
+        wait_time_value_space = [1, 1, 0.5] + np.linspace(
+            0.1, 0.01, dots_num - 3
+        ).tolist()
         for idx, glow_dot in enumerate(glow_dots):
             self.play(
                 FadeIn(glow_dot),
+                self.camera.frame.animate.move_to(glow_dot.get_center()),
                 run_time=wait_time_value_space[idx],
             )
             self.wait(wait_time_value_space[idx])
-            # self.set_camera_orientation(zoom)
 
     def set_camera_options(self):
         self.set_camera_orientation(
@@ -81,8 +85,10 @@ class SpeedTransform(ThreeDScene):
         )
 
     def construct(self):
-        self.set_camera_options()
+        # self.set_camera_options()
         self.create_dots()
+        # self.camera.frame_center = calc_centroid(self.mobjects)
+        # self.camera.frame.scale(1.5)
 
 
 def main():
