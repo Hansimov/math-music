@@ -1,5 +1,4 @@
 *.*
-!media/videos/1080p60/MathScene.mp4
-!media/videos/1080p60/GlowingPoints.mp4
+!media/videos/1080p60/*.mp4
 !*.py
 !.gitignore
