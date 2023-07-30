@@ -3,3 +3,4 @@
 !media/images/*.png
 !*.py
 !.gitignore
+!docs/*

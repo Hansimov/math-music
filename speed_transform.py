@@ -3,6 +3,7 @@ from math import pow
 from utils import calc_centroid
 import numpy as np
 from fractions import Fraction
+from utils import next_color
 
 
 def set_render_config(quality="low"):
@@ -102,23 +103,37 @@ class SpeedTransform(MovingCameraScene):
 
     def create_fractions(self, axis="x", frac=2):
         numbers = []
+
         for i in range(1, self.MAX_INTEGER * frac + 1):
-            if i % frac != 0:
-                fraction_value = Fraction(i, frac)
+            if frac == 1:
                 numbers.append(
                     {
-                        "frac": fraction_value,
-                        "float": float(fraction_value),
-                        "tex": f"\\frac{{{i}}}{{{frac}}}",
+                        "frac": i,
+                        "float": i,
+                        "tex": f"{i}",
                     }
                 )
-        dots_num = len(numbers)
+            else:
+                if i % frac != 0:
+                    fraction_value = Fraction(i, frac)
+                    numbers.append(
+                        {
+                            "frac": fraction_value,
+                            "float": float(fraction_value),
+                            "tex": f"\\frac{{{i}}}{{{frac}}}" if frac > 1 else f"{i}",
+                        }
+                    )
 
         glow_dots = []
         dot_texts = []
+        tmp_color = next_color(frac)
         for idx, number in enumerate(numbers):
-            dot = Dot3D(color=BLUE, point=[number["float"], 0, 0])
-            tex_text = MathTex(number["tex"], color=BLUE, font_size=int(48 / frac))
+            dot = Dot3D(color=tmp_color, point=[number["float"], 0, 0])
+            tex_text = MathTex(
+                number["tex"],
+                color=tmp_color,
+                font_size=int(48 / frac),
+            )
             tex_text.next_to(dot, DOWN)
 
             glow_dot = GlowDot(dot)
@@ -128,22 +143,22 @@ class SpeedTransform(MovingCameraScene):
         for idx, glow_dot in enumerate(glow_dots):
             self.play(
                 FadeIn(glow_dot),
-                FadeIn(dot_texts[idx]),
-                self.camera.frame.animate.move_to(calc_centroid(glow_dots[: idx + 1])),
+                self.camera.frame.animate.move_to(glow_dot),
                 run_time=0.1,
             )
-            self.wait(0.1)
-
-    def set_camera_options(self):
-        self.camera.frame.rotate(75 * DEGREES, axis=[1, 1, 0])
+            # self.wait(0.1)
+            self.play(
+                FadeIn(dot_texts[idx]),
+                run_time=0.1,
+            )
 
     def construct(self):
-        self.set_camera_options()
-        self.create_integers(axis="x")
+        # self.create_integers(axis="x")
+        self.create_fractions(axis="x", frac=1)
         self.create_fractions(axis="x", frac=2)
-        self.create_fractions(axis="x", frac=3)
-        self.create_fractions(axis="x", frac=4)
-        # self.create_dots(axis="y")
+        # self.create_fractions(axis="x", frac=3)
+        # self.create_fractions(axis="x", frac=4)
+        # self.create_integers(axis="y")
 
 
 def main():
