@@ -58,27 +58,36 @@ class GlowDot(VGroup):
 
 
 class SpeedTransform(MovingCameraScene):
-    def create_dots(self):
+    def create_integers(self, axis="x"):
         glow_dots = []
         dot_texts = []
-        dots_num = 11
+        dots_num = 4
         for i in range(dots_num):
-            dot = Dot3D(color=YELLOW, point=[i, 0, 0])
-            # text = Text(str(i), color=YELLOW)
-            # text.next_to(dot, DOWN)
             decimal = Integer(i, color=YELLOW)
-            decimal.next_to(dot, DOWN)
+            wait_time_value_space = np.linspace(0.1, 0.02, dots_num).tolist()
+            if axis == "x":
+                dot = Dot3D(color=YELLOW, point=[i, 0, 0])
+                decimal.next_to(dot, DOWN)
+                init_wait_time_value_space = [0.75, 0.5, 0.25]
+                wait_time_value_space = (
+                    init_wait_time_value_space
+                    + np.linspace(
+                        init_wait_time_value_space[-1],
+                        0.02,
+                        dots_num - len(init_wait_time_value_space),
+                    ).tolist()
+                )
+            elif axis == "y":
+                dot = Dot3D(color=YELLOW, point=[0, i, 0])
+                decimal.next_to(dot, LEFT)
+            else:
+                dot = Dot3D(color=YELLOW, point=[0, 0, i])
+                decimal.next_to(dot, RIGHT)
+
             glow_dot = GlowDot(dot)
             glow_dots.append(glow_dot)
             dot_texts.append(decimal)
 
-        init_wait_time_value_space = [1, 1, 0.5, 0.5]
-        wait_time_value_space = (
-            init_wait_time_value_space
-            + np.linspace(
-                0.5, 0.02, dots_num - len(init_wait_time_value_space)
-            ).tolist()
-        )
         for idx, glow_dot in enumerate(glow_dots):
             self.play(
                 FadeIn(glow_dot),
@@ -89,16 +98,12 @@ class SpeedTransform(MovingCameraScene):
             self.wait(wait_time_value_space[idx])
 
     def set_camera_options(self):
-        self.set_camera_orientation(
-            phi=75 * DEGREES,
-            theta=30 * DEGREES,
-        )
+        self.camera.frame.rotate(75 * DEGREES, axis=[1, 1, 0])
 
     def construct(self):
-        # self.set_camera_options()
-        self.create_dots()
-        # self.camera.frame_center = calc_centroid(self.mobjects)
-        # self.camera.frame.scale(1.5)
+        self.set_camera_options()
+        self.create_integers(axis="x")
+        # self.create_dots(axis="y")
 
 
 def main():
