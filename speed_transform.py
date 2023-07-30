@@ -3,7 +3,7 @@ from math import pow
 from utils import calc_centroid
 import numpy as np
 from fractions import Fraction
-from utils import next_color
+from utils import next_color, next_text_position
 
 
 def set_render_config(quality="low"):
@@ -60,12 +60,12 @@ class GlowDot(VGroup):
 
 
 class SpeedTransform(MovingCameraScene):
-    MAX_INTEGER = 4
+    DOT_NUM = 4
 
     def create_integers(self, axis="x"):
         glow_dots = []
         dot_texts = []
-        dots_num = self.MAX_INTEGER
+        dots_num = self.DOT_NUM
         for i in range(dots_num):
             decimal = Integer(i, color=YELLOW)
             wait_time_value_space = np.linspace(0.1, 0.02, dots_num).tolist()
@@ -104,7 +104,7 @@ class SpeedTransform(MovingCameraScene):
     def create_fractions(self, axis="x", frac=2):
         numbers = []
 
-        for i in range(1, self.MAX_INTEGER * frac + 1):
+        for i in range(1, self.DOT_NUM * frac + 1):
             if frac == 1:
                 numbers.append(
                     {
@@ -126,38 +126,48 @@ class SpeedTransform(MovingCameraScene):
 
         glow_dots = []
         dot_texts = []
-        tmp_color = next_color(frac)
+        tmp_color = next_color(frac - 1)
+        text_pos = next_text_position(frac - 1)
         for idx, number in enumerate(numbers):
-            dot = Dot3D(color=tmp_color, point=[number["float"], 0, 0])
+            dot = Dot3D(
+                radius=0.1 / frac,
+                color=tmp_color,
+                point=[number["float"], 0, 0],
+            )
             tex_text = MathTex(
                 number["tex"],
                 color=tmp_color,
                 font_size=int(48 / frac),
             )
-            tex_text.next_to(dot, DOWN)
+            tex_text.next_to(dot, text_pos)
 
             glow_dot = GlowDot(dot)
             glow_dots.append(glow_dot)
             dot_texts.append(tex_text)
 
-        for idx, glow_dot in enumerate(glow_dots):
+        for i in range(self.DOT_NUM):
+            if frac == 1:
+                glow_dot_chunk = [glow_dots[i]]
+                dot_text_chunk = [dot_texts[i]]
+            else:
+                glow_dot_chunk = glow_dots[i * (frac - 1) : (i + 1) * (frac - 1)]
+                dot_text_chunk = dot_texts[i * (frac - 1) : (i + 1) * (frac - 1)]
+            glow_dot_anims = [FadeIn(glow_dot) for glow_dot in glow_dot_chunk]
+            dot_text_anims = [FadeIn(dot_text) for dot_text in dot_text_chunk]
             self.play(
-                FadeIn(glow_dot),
-                self.camera.frame.animate.move_to(glow_dot),
+                *glow_dot_anims,
+                # self.camera.frame.animate.move_to(glow_dot_chunk[-1]),
                 run_time=0.1,
             )
             # self.wait(0.1)
             self.play(
-                FadeIn(dot_texts[idx]),
+                *dot_text_anims,
                 run_time=0.1,
             )
 
     def construct(self):
-        # self.create_integers(axis="x")
-        self.create_fractions(axis="x", frac=1)
-        self.create_fractions(axis="x", frac=2)
-        # self.create_fractions(axis="x", frac=3)
-        # self.create_fractions(axis="x", frac=4)
+        for i in range(1, 5):
+            self.create_fractions(axis="x", frac=i)
         # self.create_integers(axis="y")
 
 

@@ -17,3 +17,8 @@ def next_color(i):
     """
     colors = [YELLOW, BLUE, RED, GREEN, PURPLE, ORANGE, PINK, TEAL, MAROON, GOLD]
     return colors[i % len(colors)]
+
+
+def next_text_position(i):
+    positions = [DOWN, UP]
+    return positions[i % len(positions)]
