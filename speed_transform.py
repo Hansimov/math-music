@@ -60,20 +60,30 @@ class GlowDot(VGroup):
 class SpeedTransform(MovingCameraScene):
     def create_dots(self):
         glow_dots = []
-        dots_num = 15
+        dot_texts = []
+        dots_num = 11
         for i in range(dots_num):
             dot = Dot3D(color=YELLOW, point=[i, 0, 0])
+            # text = Text(str(i), color=YELLOW)
+            # text.next_to(dot, DOWN)
+            decimal = Integer(i, color=YELLOW)
+            decimal.next_to(dot, DOWN)
             glow_dot = GlowDot(dot)
             glow_dots.append(glow_dot)
+            dot_texts.append(decimal)
 
-        # wait_time_value_space = 1 * 0.5 ** np.arange(dots_num)
-        wait_time_value_space = [1, 1, 0.5] + np.linspace(
-            0.1, 0.01, dots_num - 3
-        ).tolist()
+        init_wait_time_value_space = [1, 1, 0.5, 0.5]
+        wait_time_value_space = (
+            init_wait_time_value_space
+            + np.linspace(
+                0.5, 0.02, dots_num - len(init_wait_time_value_space)
+            ).tolist()
+        )
         for idx, glow_dot in enumerate(glow_dots):
             self.play(
                 FadeIn(glow_dot),
-                self.camera.frame.animate.move_to(glow_dot.get_center()),
+                FadeIn(dot_texts[idx]),
+                self.camera.frame.animate.move_to(calc_centroid(glow_dots[: idx + 1])),
                 run_time=wait_time_value_space[idx],
             )
             self.wait(wait_time_value_space[idx])
