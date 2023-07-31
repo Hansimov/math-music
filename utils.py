@@ -30,9 +30,9 @@ def next_play_time_for_dots_creation(
     i,
     start_idx=0,
     init_play_times=[1, 1, 0.75, 0.5, 0.5],
-    mid_val=0.2,
+    mid_val=0.5,
     mid_num=5,
-    min_val=0.02,
+    min_val=0.15,
 ):
     i += start_idx
     if i >= len(init_play_times) + mid_num:
