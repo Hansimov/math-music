@@ -3,7 +3,13 @@ from math import pow, gcd
 from utils import calc_centroid
 import numpy as np
 from fractions import Fraction
-from utils import next_color, next_text_position, is_reduced, count_reduced_fractions
+from utils import (
+    next_color,
+    next_text_position,
+    is_reduced,
+    count_reduced_fractions,
+    next_play_time_for_dots_creation,
+)
 
 
 def set_render_config(quality="low"):
@@ -60,12 +66,13 @@ class GlowDot(VGroup):
 
 
 class SpeedTransform(MovingCameraScene):
-    DOT_NUM = 4
+    MAX_INTEGER = 4
+    dot_creation_idx = 0
 
     def create_integers(self, axis="x"):
         glow_dots = []
         dot_texts = []
-        dots_num = self.DOT_NUM
+        dots_num = self.MAX_INTEGER
         for i in range(dots_num):
             decimal = Integer(i, color=YELLOW)
             wait_time_value_space = np.linspace(0.1, 0.02, dots_num).tolist()
@@ -104,7 +111,7 @@ class SpeedTransform(MovingCameraScene):
     def create_fractions(self, axis="x", frac=2):
         numbers = []
 
-        for i in range(1, self.DOT_NUM * frac + 1):
+        for i in range(1, self.MAX_INTEGER * frac + 1):
             if frac == 1:
                 numbers.append(
                     {
@@ -146,7 +153,12 @@ class SpeedTransform(MovingCameraScene):
             dot_texts.append(tex_text)
 
         start_reduced_idx = 0
-        for i in range(self.DOT_NUM):
+        for i in range(self.MAX_INTEGER):
+            play_time = next_play_time_for_dots_creation(
+                i, start_idx=self.dot_creation_idx
+            )
+            self.dot_creation_idx += 1
+
             if frac == 1:
                 glow_dot_chunk = [glow_dots[i]]
                 dot_text_chunk = [dot_texts[i]]
@@ -165,16 +177,12 @@ class SpeedTransform(MovingCameraScene):
             self.play(
                 *glow_dot_anims,
                 # self.camera.frame.animate.move_to(glow_dot_chunk[-1]),
-                run_time=0.1,
+                run_time=play_time,
             )
-            # self.wait(0.1)
-            self.play(
-                *dot_text_anims,
-                run_time=0.1,
-            )
+            self.play(*dot_text_anims, run_time=play_time)
 
     def construct(self):
-        for i in range(1, 6):
+        for i in range(1, 5):
             self.create_fractions(axis="x", frac=i)
         # self.create_integers(axis="y")
 

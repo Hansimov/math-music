@@ -26,6 +26,23 @@ def next_text_position(i):
     return positions[i % len(positions)]
 
 
+def next_play_time_for_dots_creation(
+    i,
+    start_idx=0,
+    init_play_times=[1, 1, 0.75, 0.5, 0.5],
+    mid_val=0.2,
+    mid_num=5,
+    min_val=0.02,
+):
+    i += start_idx
+    if i >= len(init_play_times) + mid_num:
+        return min_val
+    if i >= len(init_play_times):
+        return mid_val
+
+    return init_play_times[i]
+
+
 def is_reduced(numerator, denominator):
     return gcd(numerator, denominator) == 1
 
