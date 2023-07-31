@@ -1,9 +1,9 @@
 from manim import *
-from math import pow
+from math import pow, gcd
 from utils import calc_centroid
 import numpy as np
 from fractions import Fraction
-from utils import next_color, next_text_position
+from utils import next_color, next_text_position, is_reduced, count_reduced_fractions
 
 
 def set_render_config(quality="low"):
@@ -114,7 +114,7 @@ class SpeedTransform(MovingCameraScene):
                     }
                 )
             else:
-                if i % frac != 0:
+                if is_reduced(i, frac):
                     fraction_value = Fraction(i, frac)
                     numbers.append(
                         {
@@ -145,13 +145,21 @@ class SpeedTransform(MovingCameraScene):
             glow_dots.append(glow_dot)
             dot_texts.append(tex_text)
 
+        start_reduced_idx = 0
         for i in range(self.DOT_NUM):
             if frac == 1:
                 glow_dot_chunk = [glow_dots[i]]
                 dot_text_chunk = [dot_texts[i]]
             else:
-                glow_dot_chunk = glow_dots[i * (frac - 1) : (i + 1) * (frac - 1)]
-                dot_text_chunk = dot_texts[i * (frac - 1) : (i + 1) * (frac - 1)]
+                reduced_fractions_count = count_reduced_fractions(i, i + 1, frac)
+                glow_dot_chunk = glow_dots[
+                    start_reduced_idx : start_reduced_idx + reduced_fractions_count
+                ]
+                dot_text_chunk = dot_texts[
+                    start_reduced_idx : start_reduced_idx + reduced_fractions_count
+                ]
+                start_reduced_idx += reduced_fractions_count
+
             glow_dot_anims = [FadeIn(glow_dot) for glow_dot in glow_dot_chunk]
             dot_text_anims = [FadeIn(dot_text) for dot_text in dot_text_chunk]
             self.play(
@@ -166,7 +174,7 @@ class SpeedTransform(MovingCameraScene):
             )
 
     def construct(self):
-        for i in range(1, 5):
+        for i in range(1, 6):
             self.create_fractions(axis="x", frac=i)
         # self.create_integers(axis="y")
 

@@ -1,5 +1,7 @@
-from manim import *
-import itertools
+from manim import YELLOW, BLUE, RED, GREEN, PURPLE, ORANGE, PINK, TEAL, MAROON, GOLD
+from manim import LEFT, RIGHT, UP, DOWN
+
+from math import gcd
 import numpy as np
 
 
@@ -22,3 +24,19 @@ def next_color(i):
 def next_text_position(i):
     positions = [DOWN, UP]
     return positions[i % len(positions)]
+
+
+def is_reduced(numerator, denominator):
+    return gcd(numerator, denominator) == 1
+
+
+def count_reduced_fractions(m, n, frac):
+    if m > n or n <= 0:
+        return 0
+
+    count = 0
+    for i in range(m * frac, n * frac + 1):
+        if is_reduced(i, frac):
+            count += 1
+
+    return count
