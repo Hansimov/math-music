@@ -1,8 +1,6 @@
 from manim import *
 from utils import colorize_symbols
 
-config.disable_caching = True
-
 
 class EquationTransition(MovingCameraScene):
     def construct(self):
@@ -14,22 +12,22 @@ class EquationTransition(MovingCameraScene):
                     "爱因斯坦求和约定",
                 ],
                 "equations": [
-                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} {{ \\vec{e_\\alpha} }} )= {{ \\vec{0} }}",
-                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} ) {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ \\mathrm{d}_\\tau }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
-                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} \,{{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )\, {{ \\mathrm{d}_\\tau }} {{ x^\\nu }} = {{ \\vec{0} }}",
-                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }}  {{ v^\\nu }} {{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
-                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ v^\\nu }} ( {{ \Gamma }} ^ {{ \\beta }} _{{ {\\mu\\nu} }}\\vec{e_\\beta}) = {{ \\vec{0} }} ",
-                    "{{ a^\\alpha }} + {{ v^\\mu }} {{ v^\\nu }} {{ \Gamma }}^ {{ \\alpha }} _ {{ {\\mu\nu} }} = {{ 0 }}",
+                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} {{ \\vec{e_\\alpha} }} ) {{ = }} {{ \\vec{0} }}",
+                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} ) {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ \\mathrm{d}_\\tau }} ( {{ \\vec{e_\\mu} }} ) {{ = }} {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} \,{{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )\, {{ \\mathrm{d}_\\tau }} {{ x^\\nu }} {{=}} {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }}  {{ v^\\nu }} {{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} ) {{=}} {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ v^\\nu }} ( {{ \Gamma }} ^ {{ \\beta }} _{{ {\\mu\\nu} }}\\vec{e_\\beta}) {{=}} {{ \\vec{0} }} ",
+                    "{{ a^\\alpha }} + {{ v^\\mu }} {{ v^\\nu }} {{ \Gamma }}^ {{ \\alpha }} _ {{ {\\mu\nu} }} {{=}} {{ 0 }}",
                 ],
                 "animation": "each",
             },
             {
                 "texts": ["牛顿万有引力定律"],
                 "equations": [
-                    "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
-                    "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
-                    "{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
-                    "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
+                    "{{ \\frac{\\vec{F} }{m} }} {{=}} - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                    "- {{ \\nabla\\phi }} {{=}} - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                    "{{ \\nabla\\phi }} {{=}} {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
+                    "\\nabla\\cdot({{ \\nabla\\phi }}) {{=}} {{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
                 ],
                 "animation": "each",
             },
@@ -76,7 +74,7 @@ class EquationTransition(MovingCameraScene):
                         ),
                         run_time=1,
                         transform_mismatches=False,
-                        fade_transform_mismatches=True,
+                        fade_transform_mismatches=False,
                     )
 
                 self.wait(0.5)
