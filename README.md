@@ -6,6 +6,9 @@
 * slama.dev – Manim – Camera and Graphs
   * https://slama.dev/manim/camera-and-graphs
 
+* slama.dev – Manim – Groups, Transforms, Updaters
+  * https://slama.dev/manim/groups-transformations-updaters/
+
 * Reference Manual - Manim Community v0.17.3
   * https://docs.manim.community/en/stable/reference.html
 
