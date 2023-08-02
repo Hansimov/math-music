@@ -3,25 +3,39 @@ from manim import *
 
 class EquationTransition(MovingCameraScene):
     def construct(self):
-        eq1 = MathTex("\\frac{\\vec{F}}{m}", "=-\\frac{GM}{r^2}\\vec{e_r}")
-        eq2 = MathTex("-\\nabla\\phi", "=-\\frac{GM}{r^2}\\vec{e_r}")
-        eq3 = MathTex("\\nabla\\phi", "=\\frac{GM}{r^2}\\vec{e_r}")
-        equations = [eq1, eq2, eq3]
-        for i in range(len(equations) - 1):
-            self.wait(0.5)
-            eq_old = equations[i]
-            eq_new = equations[i + 1]
-            self.play(
-                TransformMatchingTex(
-                    eq_old,
-                    eq_new,
-                    transform_mismatches=True,
-                    fade_transform_mismatches=True,
+        equation_groups = [
+            [
+                MathTex(
+                    "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}"
                 ),
-                run_time=1,
-            )
+                MathTex(
+                    "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}"
+                ),
+                MathTex("{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}"),
+                MathTex(
+                    "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
+                ),
+            ],
+        ]
+        # math_texs = [
+        #     MathTex(*equation) for eq_grp in equation_groups for equation in eq_grp
+        # ]
 
-        self.wait(0.5)
+        for equation_group in equation_groups:
+            for i in range(len(equation_group) - 1):
+                # self.wait(0.5)
+                eq_old = equation_group[i]
+                eq_new = equation_group[i + 1]
+                self.play(
+                    TransformMatchingTex(
+                        eq_old,
+                        eq_new,
+                        transform_mismatches=True,
+                        fade_transform_mismatches=False,
+                    ),
+                    run_time=1,
+                )
+            self.wait(0.5)
 
 
 def main():
