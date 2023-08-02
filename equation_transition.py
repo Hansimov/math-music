@@ -6,6 +6,12 @@ class EquationTransition(MovingCameraScene):
     def construct(self):
         equation_groups = [
             [
+                "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} {{ \\vec{e_\\alpha} }} )= {{ \\vec{0} }}",
+                "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} ) {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ \\mathrm{d}_\\tau }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
+                "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} \,{{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )\, {{ \\mathrm{d}_\\tau }} {{ x^\\nu }} = {{ \\vec{0} }}",
+                "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }}  {{ v^\\nu }} {{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
+            ],
+            [
                 "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
                 "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
                 "{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
@@ -14,25 +20,35 @@ class EquationTransition(MovingCameraScene):
         ]
 
         equation_groups = [
-            [MathTex(equation) for equation in equation_group]
+            [self.process_equation(equation) for equation in equation_group]
             for equation_group in equation_groups
         ]
+        # for equation_group in equation_groups:
+        #     for equation in equation_group:
+        #         colorize_symbols(equation, ["\\nabla"])
 
         for equation_group in equation_groups:
+            self.play(FadeIn(equation_group[0]), run_time=1)
+            self.wait(0.8)
             for i in range(len(equation_group) - 1):
-                # self.wait(0.5)
                 eq_old = equation_group[i]
                 eq_new = equation_group[i + 1]
                 self.play(
                     TransformMatchingTex(
                         eq_old,
                         eq_new,
-                        transform_mismatches=True,
+                        transform_mismatches=False,
                         fade_transform_mismatches=False,
                     ),
                     run_time=1,
                 )
-            self.wait(0.5)
+                self.wait(0.8)
+            # self.clear()
+            self.play(*[FadeOut(mob) for mob in self.mobjects], run_time=1)
+
+    def process_equation(self, equation):
+        equation = MathTex(equation)
+        return equation
 
 
 def main():

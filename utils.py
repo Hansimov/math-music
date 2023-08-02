@@ -57,3 +57,11 @@ def count_reduced_fractions(m, n, frac):
             count += 1
 
     return count
+
+
+def colorize_symbols(equation, symbols, color=YELLOW):
+    if type(symbols) == str:
+        symbols = [symbols]
+    for symbol in symbols:
+        equation.set_color_by_tex(symbol, color)
+    return equation
