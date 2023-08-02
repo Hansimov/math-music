@@ -1,36 +1,38 @@
 from manim import *
 from utils import colorize_symbols
 
+config.disable_caching = True
+
 
 class EquationTransition(MovingCameraScene):
     def construct(self):
         equation_groups = [
-            # {
-            #     "texts": [
-            #         "万恶的爱因斯坦求和约定",
-            #         "<s>万恶的</s>爱因斯坦求和约定",
-            #         "爱因斯坦求和约定",
-            #     ],
-            #     "equations": [
-            #         "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} {{ \\vec{e_\\alpha} }} )= {{ \\vec{0} }}",
-            #         "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} ) {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ \\mathrm{d}_\\tau }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
-            #         "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} \,{{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )\, {{ \\mathrm{d}_\\tau }} {{ x^\\nu }} = {{ \\vec{0} }}",
-            #         "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }}  {{ v^\\nu }} {{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
-            #         "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ v^\\nu }} ( {{ \Gamma }} ^ {{ \\beta }} _{{ {\\mu\\nu} }}\\vec{e_\\beta}) = {{ \\vec{0} }} ",
-            #         "{{ a^\\alpha }} + {{ v^\\mu }} {{ v^\\nu }} {{ \Gamma }}^ {{ \\alpha }} _ {{ {\\mu\nu} }} = {{ 0 }}",
-            #     ],
-            #     "animation": "each",
-            # },
-            # {
-            #     "texts": ["牛顿万有引力定律"],
-            #     "equations": [
-            #         "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
-            #         "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
-            #         "{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
-            #         "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
-            #     ],
-            #     "animation": "each",
-            # },
+            {
+                "texts": [
+                    "万恶的爱因斯坦求和约定",
+                    "<s>万恶的</s>爱因斯坦求和约定",
+                    "爱因斯坦求和约定",
+                ],
+                "equations": [
+                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} {{ \\vec{e_\\alpha} }} )= {{ \\vec{0} }}",
+                    "{{ \\mathrm{d}_\\tau }} ( {{ v^\\alpha }} ) {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ \\mathrm{d}_\\tau }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} \,{{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )\, {{ \\mathrm{d}_\\tau }} {{ x^\\nu }} = {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }}  {{ v^\\nu }} {{ \\mathrm{d}_{x^\\nu} }} ( {{ \\vec{e_\\mu} }} )= {{ \\vec{0} }}",
+                    "{{ a^\\alpha }} {{ \\vec{e_\\alpha} }} + {{ v^\\mu }} {{ v^\\nu }} ( {{ \Gamma }} ^ {{ \\beta }} _{{ {\\mu\\nu} }}\\vec{e_\\beta}) = {{ \\vec{0} }} ",
+                    "{{ a^\\alpha }} + {{ v^\\mu }} {{ v^\\nu }} {{ \Gamma }}^ {{ \\alpha }} _ {{ {\\mu\nu} }} = {{ 0 }}",
+                ],
+                "animation": "each",
+            },
+            {
+                "texts": ["牛顿万有引力定律"],
+                "equations": [
+                    "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                    "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                    "{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
+                    "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
+                ],
+                "animation": "each",
+            },
             {
                 "texts": [
                     "里奇张量 <sub>(Ricci tensor)</sub>",
@@ -79,7 +81,7 @@ class EquationTransition(MovingCameraScene):
 
                 self.wait(0.5)
 
-                self.play(Write(equations[0]), run_time=1)
+                self.play(FadeIn(equations[0]), run_time=1)
                 self.wait(0.8)
                 for i in range(len(equations) - 1):
                     eq_old = equations[i]
@@ -95,21 +97,24 @@ class EquationTransition(MovingCameraScene):
                     )
                     self.wait(0.8)
             else:  # animation_type == "combine":
-                for idx, text in enumerate(texts[:-1]):
-                    text_left_offset = LEFT * 2.5
-                    text_up_offset = UP * (2.5 - idx * 2)
-                    text.move_to(text_left_offset + text_up_offset)
-                    self.play(Write(text), run_time=1.2)
+                single_equations_group = VGroup()
+                for i in range(len(texts) - 1):
+                    single_equations_group.add(*(texts[i], equations[i]))
+                    single_equations_group.arrange(DOWN, buff=0.5)
+                single_equations_group.move_to(LEFT * 3)
 
-                    equation = equations[idx]
-                    equation_left_offset = LEFT * 2.5
-                    equation_up_offset = UP * (1.5 - idx * 2)
-                    equation.move_to(equation_left_offset + equation_up_offset)
-                    self.play(Write(equation), run_time=1)
+                for obj in single_equations_group:
+                    self.play(Write(obj), run_time=1.2)
+
+                single_equations = [
+                    obj
+                    for obj in single_equations_group.submobjects
+                    if isinstance(obj, MathTex)
+                ]
 
                 single_equations = Group(*equations[:-1]).copy()
                 combined_equation = equations[-1]
-                combined_equation.move_to(RIGHT * 2.5)
+                combined_equation.move_to(RIGHT * 3)
                 self.wait(0.5)
                 self.play(
                     TransformMatchingShapes(
