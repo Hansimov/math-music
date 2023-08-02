@@ -1,25 +1,22 @@
 from manim import *
+from utils import colorize_symbols
 
 
 class EquationTransition(MovingCameraScene):
     def construct(self):
         equation_groups = [
             [
-                MathTex(
-                    "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}"
-                ),
-                MathTex(
-                    "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}"
-                ),
-                MathTex("{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}"),
-                MathTex(
-                    "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
-                ),
+                "{{ \\frac{\\vec{F} }{m} }} = - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                "- {{ \\nabla\\phi }}= - {{ \\frac{GM}{r^2} }} {{ \\vec{e_r} }}",
+                "{{ \\nabla\\phi }} = {{ \\frac{GM}{r^2} }}{{ \\vec{e_r} }}",
+                "\\nabla\\cdot({{ \\nabla\\phi }})={{ \\frac{GM}{r^2} }}{{ \\frac{4\\pi r^2}{V} }}",
             ],
         ]
-        # math_texs = [
-        #     MathTex(*equation) for eq_grp in equation_groups for equation in eq_grp
-        # ]
+
+        equation_groups = [
+            [MathTex(equation) for equation in equation_group]
+            for equation_group in equation_groups
+        ]
 
         for equation_group in equation_groups:
             for i in range(len(equation_group) - 1):
