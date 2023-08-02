@@ -1,5 +1,4 @@
 from manim import *
-from utils import colorize_symbols
 
 
 class EquationTransition(MovingCameraScene):
@@ -126,12 +125,19 @@ class EquationTransition(MovingCameraScene):
 
     def process_equation(self, equation):
         equation = MathTex(equation)
-        equation = colorize_symbols(equation, ["\\mathrm{d}"])
+        equation = self.colorize_symbols(equation, ["\\mathrm{d}"])
         return equation
 
     def process_text(self, text):
         text = MarkupText(text)
         return text
+
+    def colorize_symbols(self, equation, symbols, color=YELLOW):
+        if type(symbols) == str:
+            symbols = [symbols]
+        for symbol in symbols:
+            equation.set_color_by_tex(symbol, color)
+        return equation
 
 
 def main():
